@@ -1,22 +1,11 @@
-# Airbnb JavaScript Style Guide() {
+# Mono Solutions JavaScript Style Guide() {
 
 *A mostly reasonable approach to JavaScript*
 
-> **Note**: this guide assumes you are using [Babel](https://babeljs.io), and requires that you use [babel-preset-airbnb](https://npmjs.com/babel-preset-airbnb) or the equivalent. It also assumes you are installing shims/polyfills in your app, with [airbnb-browser-shims](https://npmjs.com/airbnb-browser-shims) or the equivalent.
-
-[![Downloads](https://img.shields.io/npm/dm/eslint-config-airbnb.svg)](https://www.npmjs.com/package/eslint-config-airbnb)
-[![Downloads](https://img.shields.io/npm/dm/eslint-config-airbnb-base.svg)](https://www.npmjs.com/package/eslint-config-airbnb-base)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/airbnb/javascript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-This guide is available in other languages too. See [Translation](#translation)
-
 Other Style Guides
 
-  - [ES5 (Deprecated)](https://github.com/airbnb/javascript/tree/es5-deprecated/es5)
-  - [React](react/)
-  - [CSS-in-JavaScript](css-in-javascript/)
-  - [CSS & Sass](https://github.com/airbnb/css)
-  - [Ruby](https://github.com/airbnb/ruby)
+  - [VueJS](https://github.com/monosolutions/vuejs-style-guide)
+  - [CSS & Sass](https://github.com/monosolutions/css-style-guide)
 
 ## Table of Contents
 
@@ -52,12 +41,7 @@ Other Style Guides
   1. [Testing](#testing)
   1. [Performance](#performance)
   1. [Resources](#resources)
-  1. [In the Wild](#in-the-wild)
-  1. [Translation](#translation)
   1. [The JavaScript Style Guide Guide](#the-javascript-style-guide-guide)
-  1. [Chat With Us About JavaScript](#chat-with-us-about-javascript)
-  1. [Contributors](#contributors)
-  1. [License](#license)
   1. [Amendments](#amendments)
 
 ## Types
@@ -645,66 +629,12 @@ Other Style Guides
 
 ## Functions
 
-  <a name="functions--declarations"></a><a name="7.1"></a>
-  - [7.1](#functions--declarations) Use named function expressions instead of function declarations. eslint: [`func-style`](https://eslint.org/docs/rules/func-style)
 
-    > Why? Function declarations are hoisted, which means that it’s easy - too easy - to reference the function before it is defined in the file. This harms readability and maintainability. If you find that a function’s definition is large or complex enough that it is interfering with understanding the rest of the file, then perhaps it’s time to extract it to its own module! Don’t forget to explicitly name the expression, regardless of whether or not the name is inferred from the containing variable (which is often the case in modern browsers or when using compilers such as Babel). This eliminates any assumptions made about the Error’s call stack. ([Discussion](https://github.com/airbnb/javascript/issues/794))
+  <a name="functions--in-blocks"></a><a name="7.1"></a>
+  - [7.1](#functions--in-blocks) Never declare a function in a non-function block (`if`, `while`, etc). Assign the function to a variable instead. Browsers will allow you to do it, but they all interpret it differently, which is bad news bears. eslint: [`no-loop-func`](https://eslint.org/docs/rules/no-loop-func.html)
 
-    ```javascript
-    // bad
-    function foo() {
-      // ...
-    }
-
-    // bad
-    const foo = function () {
-      // ...
-    };
-
-    // good
-    // lexical name distinguished from the variable-referenced invocation(s)
-    const short = function longUniqueMoreDescriptiveLexicalFoo() {
-      // ...
-    };
-    ```
-
-  <a name="functions--iife"></a><a name="7.2"></a>
-  - [7.2](#functions--iife) Wrap immediately invoked function expressions in parentheses. eslint: [`wrap-iife`](https://eslint.org/docs/rules/wrap-iife.html)
-
-    > Why? An immediately invoked function expression is a single unit - wrapping both it, and its invocation parens, in parens, cleanly expresses this. Note that in a world with modules everywhere, you almost never need an IIFE.
-
-    ```javascript
-    // immediately-invoked function expression (IIFE)
-    (function () {
-      console.log('Welcome to the Internet. Please follow me.');
-    }());
-    ```
-
-  <a name="functions--in-blocks"></a><a name="7.3"></a>
-  - [7.3](#functions--in-blocks) Never declare a function in a non-function block (`if`, `while`, etc). Assign the function to a variable instead. Browsers will allow you to do it, but they all interpret it differently, which is bad news bears. eslint: [`no-loop-func`](https://eslint.org/docs/rules/no-loop-func.html)
-
-  <a name="functions--note-on-blocks"></a><a name="7.4"></a>
-  - [7.4](#functions--note-on-blocks) **Note:** ECMA-262 defines a `block` as a list of statements. A function declaration is not a statement.
-
-    ```javascript
-    // bad
-    if (currentUser) {
-      function test() {
-        console.log('Nope.');
-      }
-    }
-
-    // good
-    let test;
-    if (currentUser) {
-      test = () => {
-        console.log('Yup.');
-      };
-    }
-    ```
-
-  <a name="functions--arguments-shadow"></a><a name="7.5"></a>
-  - [7.5](#functions--arguments-shadow) Never name a parameter `arguments`. This will take precedence over the `arguments` object that is given to every function scope.
+  <a name="functions--arguments-shadow"></a><a name="7.2"></a>
+  - [7.2](#functions--arguments-shadow) Never name a parameter `arguments`. This will take precedence over the `arguments` object that is given to every function scope.
 
     ```javascript
     // bad
@@ -718,8 +648,8 @@ Other Style Guides
     }
     ```
 
-  <a name="es6-rest"></a><a name="7.6"></a>
-  - [7.6](#es6-rest) Never use `arguments`, opt to use rest syntax `...` instead. eslint: [`prefer-rest-params`](https://eslint.org/docs/rules/prefer-rest-params)
+  <a name="es6-rest"></a><a name="7.3"></a>
+  - [7.3](#es6-rest) Never use `arguments`, opt to use rest syntax `...` instead. eslint: [`prefer-rest-params`](https://eslint.org/docs/rules/prefer-rest-params)
 
     > Why? `...` is explicit about which arguments you want pulled. Plus, rest arguments are a real Array, and not merely Array-like like `arguments`.
 
@@ -736,8 +666,8 @@ Other Style Guides
     }
     ```
 
-  <a name="es6-default-parameters"></a><a name="7.7"></a>
-  - [7.7](#es6-default-parameters) Use default parameter syntax rather than mutating function arguments.
+  <a name="es6-default-parameters"></a><a name="7.4"></a>
+  - [7.4](#es6-default-parameters) Use default parameter syntax rather than mutating function arguments.
 
     ```javascript
     // really bad
@@ -763,8 +693,8 @@ Other Style Guides
     }
     ```
 
-  <a name="functions--default-side-effects"></a><a name="7.8"></a>
-  - [7.8](#functions--default-side-effects) Avoid side effects with default parameters.
+  <a name="functions--default-side-effects"></a><a name="7.5"></a>
+  - [7.5](#functions--default-side-effects) Avoid side effects with default parameters.
 
     > Why? They are confusing to reason about.
 
@@ -780,8 +710,8 @@ Other Style Guides
     count();  // 3
     ```
 
-  <a name="functions--defaults-last"></a><a name="7.9"></a>
-  - [7.9](#functions--defaults-last) Always put default parameters last.
+  <a name="functions--defaults-last"></a><a name="7.6"></a>
+  - [7.6](#functions--defaults-last) Always put default parameters last.
 
     ```javascript
     // bad
@@ -795,8 +725,8 @@ Other Style Guides
     }
     ```
 
-  <a name="functions--constructor"></a><a name="7.10"></a>
-  - [7.10](#functions--constructor) Never use the Function constructor to create a new function. eslint: [`no-new-func`](https://eslint.org/docs/rules/no-new-func)
+  <a name="functions--constructor"></a><a name="7.7"></a>
+  - [7.7](#functions--constructor) Never use the Function constructor to create a new function. eslint: [`no-new-func`](https://eslint.org/docs/rules/no-new-func)
 
     > Why? Creating a function in this way evaluates a string similarly to `eval()`, which opens vulnerabilities.
 
@@ -808,8 +738,8 @@ Other Style Guides
     var subtract = Function('a', 'b', 'return a - b');
     ```
 
-  <a name="functions--signature-spacing"></a><a name="7.11"></a>
-  - [7.11](#functions--signature-spacing) Spacing in a function signature. eslint: [`space-before-function-paren`](https://eslint.org/docs/rules/space-before-function-paren) [`space-before-blocks`](https://eslint.org/docs/rules/space-before-blocks)
+  <a name="functions--signature-spacing"></a><a name="7.8"></a>
+  - [7.8](#functions--signature-spacing) Spacing in a function signature. eslint: [`space-before-function-paren`](https://eslint.org/docs/rules/space-before-function-paren) [`space-before-blocks`](https://eslint.org/docs/rules/space-before-blocks)
 
     > Why? Consistency is good, and you shouldn’t have to add or remove a space when adding or removing a name.
 
@@ -824,8 +754,8 @@ Other Style Guides
     const y = function a() {};
     ```
 
-  <a name="functions--mutate-params"></a><a name="7.12"></a>
-  - [7.12](#functions--mutate-params) Never mutate parameters. eslint: [`no-param-reassign`](https://eslint.org/docs/rules/no-param-reassign.html)
+  <a name="functions--mutate-params"></a><a name="7.9"></a>
+  - [7.9](#functions--mutate-params) Never mutate parameters. eslint: [`no-param-reassign`](https://eslint.org/docs/rules/no-param-reassign.html)
 
     > Why? Manipulating objects passed in as parameters can cause unwanted variable side effects in the original caller.
 
@@ -841,8 +771,8 @@ Other Style Guides
     }
     ```
 
-  <a name="functions--reassign-params"></a><a name="7.13"></a>
-  - [7.13](#functions--reassign-params) Never reassign parameters. eslint: [`no-param-reassign`](https://eslint.org/docs/rules/no-param-reassign.html)
+  <a name="functions--reassign-params"></a><a name="7.10"></a>
+  - [7.10](#functions--reassign-params) Never reassign parameters. eslint: [`no-param-reassign`](https://eslint.org/docs/rules/no-param-reassign.html)
 
     > Why? Reassigning parameters can lead to unexpected behavior, especially when accessing the `arguments` object. It can also cause optimization issues, especially in V8.
 
@@ -868,30 +798,35 @@ Other Style Guides
       // ...
     }
     ```
+  <a name="functions--iife"></a><a name="7.11"></a>
+  - [7.11](#functions--iife) Wrap immediately invoked function expressions in parentheses. eslint: [`wrap-iife`](https://eslint.org/docs/rules/wrap-iife.html)
+    > Why? An immediately invoked function expression is a single unit - wrapping both it, and its invocation parens, in parens, cleanly expresses this. **Note that in a world with modules everywhere, you almost never need an IIFE.**
+      ```javascript
+      // immediately-invoked function expression (IIFE)
+      (function () {
+        console.log('Welcome to the Internet. Please follow me.');
+      }());
+      ```
 
-  <a name="functions--spread-vs-apply"></a><a name="7.14"></a>
-  - [7.14](#functions--spread-vs-apply) Prefer the use of the spread operator `...` to call variadic functions. eslint: [`prefer-spread`](https://eslint.org/docs/rules/prefer-spread)
+  <a name="functions--spread-vs-apply"></a><a name="7.12"></a>
+  - [7.12](#functions--spread-vs-apply) Prefer the use of the spread operator `...` to call variadic functions. eslint: [`prefer-spread`](https://eslint.org/docs/rules/prefer-spread)
 
     > Why? It’s cleaner, you don’t need to supply a context, and you can not easily compose `new` with `apply`.
-
     ```javascript
     // bad
     const x = [1, 2, 3, 4, 5];
     console.log.apply(console, x);
-
     // good
     const x = [1, 2, 3, 4, 5];
     console.log(...x);
-
     // bad
     new (Function.prototype.bind.apply(Date, [null, 2016, 8, 5]));
-
     // good
     new Date(...[2016, 8, 5]);
     ```
 
   <a name="functions--signature-invocation-indentation"></a>
-  - [7.15](#functions--signature-invocation-indentation) Functions with multiline signatures, or invocations, should be indented just like every other multiline list in this guide: with each item on a line by itself, with a trailing comma on the last item. eslint: [`function-paren-newline`](https://eslint.org/docs/rules/function-paren-newline)
+  - [7.13](#functions--signature-invocation-indentation) Functions with multiline signatures, or invocations, should be indented just like every other multiline list in this guide: with each item on a line by itself, with a trailing comma on the last item. eslint: [`function-paren-newline`](https://eslint.org/docs/rules/function-paren-newline)
 
     ```javascript
     // bad
@@ -900,7 +835,6 @@ Other Style Guides
                  quux) {
       // ...
     }
-
     // good
     function foo(
       bar,
@@ -909,12 +843,10 @@ Other Style Guides
     ) {
       // ...
     }
-
     // bad
     console.log(foo,
       bar,
       baz);
-
     // good
     console.log(
       foo,
@@ -1178,27 +1110,8 @@ Other Style Guides
       .setHeight(20);
     ```
 
-  <a name="constructors--tostring"></a><a name="9.4"></a>
-  - [9.4](#constructors--tostring) It’s okay to write a custom `toString()` method, just make sure it works successfully and causes no side effects.
-
-    ```javascript
-    class Jedi {
-      constructor(options = {}) {
-        this.name = options.name || 'no name';
-      }
-
-      getName() {
-        return this.name;
-      }
-
-      toString() {
-        return `Jedi - ${this.getName()}`;
-      }
-    }
-    ```
-
-  <a name="constructors--no-useless"></a><a name="9.5"></a>
-  - [9.5](#constructors--no-useless) Classes have a default constructor if one is not specified. An empty constructor function or one that just delegates to a parent class is unnecessary. eslint: [`no-useless-constructor`](https://eslint.org/docs/rules/no-useless-constructor)
+  <a name="constructors--no-useless"></a><a name="9.4"></a>
+  - [9.4](#constructors--no-useless) Classes have a default constructor if one is not specified. An empty constructor function or one that just delegates to a parent class is unnecessary. eslint: [`no-useless-constructor`](https://eslint.org/docs/rules/no-useless-constructor)
 
     ```javascript
     // bad
@@ -1227,7 +1140,7 @@ Other Style Guides
     ```
 
   <a name="classes--no-duplicate-members"></a>
-  - [9.6](#classes--no-duplicate-members) Avoid duplicate class members. eslint: [`no-dupe-class-members`](https://eslint.org/docs/rules/no-dupe-class-members)
+  - [9.5](#classes--no-duplicate-members) Avoid duplicate class members. eslint: [`no-dupe-class-members`](https://eslint.org/docs/rules/no-dupe-class-members)
 
     > Why? Duplicate class member declarations will silently prefer the last one - having duplicates is almost certainly a bug.
 
@@ -1369,27 +1282,8 @@ Other Style Guides
     foo.init();
     ```
 
-  <a name="modules--multiline-imports-over-newlines"></a>
-  - [10.8](#modules--multiline-imports-over-newlines) Multiline imports should be indented just like multiline array and object literals.
-
-    > Why? The curly braces follow the same indentation rules as every other curly brace block in the style guide, as do the trailing commas.
-
-    ```javascript
-    // bad
-    import {longNameA, longNameB, longNameC, longNameD, longNameE} from 'path';
-
-    // good
-    import {
-      longNameA,
-      longNameB,
-      longNameC,
-      longNameD,
-      longNameE,
-    } from 'path';
-    ```
-
   <a name="modules--no-webpack-loader-syntax"></a>
-  - [10.9](#modules--no-webpack-loader-syntax) Disallow Webpack loader syntax in module import statements.
+  - [10.8](#modules--no-webpack-loader-syntax) Disallow Webpack loader syntax in module import statements.
  eslint: [`import/no-webpack-loader-syntax`](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-webpack-loader-syntax.md)
     > Why? Since using Webpack syntax in the imports couples the code to a module bundler. Prefer using the loader syntax in `webpack.config.js`.
 
@@ -1551,17 +1445,6 @@ Other Style Guides
     }
 
     const isJedi = getProp('jedi');
-    ```
-  <a name="es2016-properties--exponentiation-operator"></a>
-  - [12.3](#es2016-properties--exponentiation-operator) Use exponentiation operator `**` when calculating exponentiations. eslint: [`no-restricted-properties`](https://eslint.org/docs/rules/no-restricted-properties).
-
-    ```javascript
-    // bad
-    const binary = Math.pow(2, 10);
-
-    // good
-    const binary = 2 ** 10;
-    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1578,31 +1461,8 @@ Other Style Guides
     const superPower = new SuperPower();
     ```
 
-  <a name="variables--one-const"></a><a name="13.2"></a>
-  - [13.2](#variables--one-const) Use one `const` or `let` declaration per variable or assignment. eslint: [`one-var`](https://eslint.org/docs/rules/one-var.html)
-
-    > Why? It’s easier to add new variable declarations this way, and you never have to worry about swapping out a `;` for a `,` or introducing punctuation-only diffs. You can also step through each declaration with the debugger, instead of jumping through all of them at once.
-
-    ```javascript
-    // bad
-    const items = getItems(),
-        goSportsTeam = true,
-        dragonball = 'z';
-
-    // bad
-    // (compare to above, and try to spot the mistake)
-    const items = getItems(),
-        goSportsTeam = true;
-        dragonball = 'z';
-
-    // good
-    const items = getItems();
-    const goSportsTeam = true;
-    const dragonball = 'z';
-    ```
-
-  <a name="variables--const-let-group"></a><a name="13.3"></a>
-  - [13.3](#variables--const-let-group) Group all your `const`s and then group all your `let`s.
+  <a name="variables--const-let-group"></a><a name="13.2"></a>
+  - [13.2](#variables--const-let-group) Group all your `const`s and then group all your `let`s.
 
     > Why? This is helpful when later on you might need to assign a variable depending on one of the previous assigned variables.
 
@@ -1627,8 +1487,8 @@ Other Style Guides
     let length;
     ```
 
-  <a name="variables--define-where-used"></a><a name="13.4"></a>
-  - [13.4](#variables--define-where-used) Assign variables where you need them, but place them in a reasonable place.
+  <a name="variables--define-where-used"></a><a name="13.3"></a>
+  - [13.3](#variables--define-where-used) Assign variables where you need them, but place them in a reasonable place.
 
     > Why? `let` and `const` are block scoped and not function scoped.
 
@@ -1665,8 +1525,8 @@ Other Style Guides
       return name;
     }
     ```
-  <a name="variables--no-chain-assignment"></a><a name="13.5"></a>
-  - [13.5](#variables--no-chain-assignment) Don’t chain variable assignments. eslint: [`no-multi-assign`](https://eslint.org/docs/rules/no-multi-assign)
+  <a name="variables--no-chain-assignment"></a><a name="13.4"></a>
+  - [13.4](#variables--no-chain-assignment) Don’t chain variable assignments. eslint: [`no-multi-assign`](https://eslint.org/docs/rules/no-multi-assign)
 
     > Why? Chaining variable assignments creates implicit global variables.
 
@@ -1698,8 +1558,8 @@ Other Style Guides
     // the same applies for `const`
     ```
 
-  <a name="variables--unary-increment-decrement"></a><a name="13.6"></a>
-  - [13.6](#variables--unary-increment-decrement) Avoid using unary increments and decrements (`++`, `--`). eslint [`no-plusplus`](https://eslint.org/docs/rules/no-plusplus)
+  <a name="variables--unary-increment-decrement"></a><a name="13.5"></a>
+  - [13.5](#variables--unary-increment-decrement) Avoid using unary increments and decrements (`++`, `--`). eslint [`no-plusplus`](https://eslint.org/docs/rules/no-plusplus)
 
     > Why? Per the eslint documentation, unary increment and decrement statements are subject to automatic semicolon insertion and can cause silent errors with incrementing or decrementing values within an application. It is also more expressive to mutate your values with statements like `num += 1` instead of `num++` or `num ++`. Disallowing unary increment and decrement statements also prevents you from pre-incrementing/pre-decrementing values unintentionally which can also cause unexpected behavior in your programs.
 
@@ -1732,8 +1592,9 @@ Other Style Guides
     const truthyCount = array.filter(Boolean).length;
     ```
 
+
 <a name="variables--linebreak"></a>
-  - [13.7](#variables--linebreak) Avoid linebreaks before or after `=` in an assignment. If your assignment violates [`max-len`](https://eslint.org/docs/rules/max-len.html), surround the value in parens. eslint [`operator-linebreak`](https://eslint.org/docs/rules/operator-linebreak.html).
+  - [13.6](#variables--linebreak) Avoid linebreaks before or after `=` in an assignment. If your assignment violates [`max-len`](https://eslint.org/docs/rules/max-len.html), surround the value in parens. eslint [`operator-linebreak`](https://eslint.org/docs/rules/operator-linebreak.html).
 
     > Why? Linebreaks surrounding `=` can obfuscate the value of an assignment.
 
@@ -1756,7 +1617,7 @@ Other Style Guides
     ```
 
 <a name="variables--no-unused-vars"></a>
-  - [13.8](#variables--no-unused-vars) Disallow unused variables. eslint: [`no-unused-vars`](https://eslint.org/docs/rules/no-unused-vars)
+  - [13.7](#variables--no-unused-vars) Disallow unused variables. eslint: [`no-unused-vars`](https://eslint.org/docs/rules/no-unused-vars)
 
     > Why? Variables that are declared and not used anywhere in the code are most likely an error due to incomplete refactoring. Such variables take up space in the code and can lead to confusion by readers.
 
@@ -1795,6 +1656,27 @@ Other Style Guides
     // 'coords' is now the 'data' object without its 'type' property.
     ```
 
+  <a name="variables--one-const"></a><a name="13.8"></a>
+  - [13.8](#variables--one-const) Use one `const` or `let` declaration per variable or assignment. eslint: [`one-var`](https://eslint.org/docs/rules/one-var.html)
+
+    > Why? It’s easier to add new variable declarations this way, and you never have to worry about swapping out a `;` for a `,` or introducing punctuation-only diffs. You can also step through each declaration with the debugger, instead of jumping through all of them at once.
+    ```javascript
+    // bad
+    const items = getItems(),
+        goSportsTeam = true,
+        dragonball = 'z';
+    // bad
+    // (compare to above, and try to spot the mistake)
+    const items = getItems(),
+        goSportsTeam = true;
+        dragonball = 'z';
+    // good
+    const items = getItems();
+    const goSportsTeam = true;
+    const dragonball = 'z';
+    ```
+
+
 **[⬆ back to top](#table-of-contents)**
 
 ## Hoisting
@@ -1829,7 +1711,7 @@ Other Style Guides
 
     // using const and let
     function example() {
-      console.log(declaredButNotAssigned); // => throws a ReferenceError
+      console.log(declaredButNotAssddled-elsesigned); // => throws a ReferenceError
       console.log(typeof declaredButNotAssigned); // => throws a ReferenceError
       const declaredButNotAssigned = true;
     }
@@ -1893,8 +1775,6 @@ Other Style Guides
     ```
 
   - For more information refer to [JavaScript Scoping & Hoisting](http://www.adequatelygood.com/2010/2/JavaScript-Scoping-and-Hoisting/) by [Ben Cherry](http://www.adequatelygood.com/).
-
-**[⬆ back to top](#table-of-contents)**
 
 ## Comparison Operators & Equality
 
@@ -2123,7 +2003,6 @@ Other Style Guides
       thing3();
     }
     ```
-
   <a name="blocks--no-else-return"></a><a name="16.3"></a>
   - [16.3](#blocks--no-else-return) If an `if` block always executes a `return` statement, the subsequent `else` block is unnecessary. A `return` in an `else if` block following an `if` block that contains a `return` can be separated into multiple `if` blocks. eslint: [`no-else-return`](https://eslint.org/docs/rules/no-else-return)
 
@@ -2188,7 +2067,6 @@ Other Style Guides
       }
     }
     ```
-
 **[⬆ back to top](#table-of-contents)**
 
 ## Control Statements
@@ -2371,58 +2249,33 @@ Other Style Guides
     ```
 
   <a name="comments--actionitems"></a><a name="17.3"></a>
-  - [18.4](#comments--actionitems) Prefixing your comments with `FIXME` or `TODO` helps other developers quickly understand if you’re pointing out a problem that needs to be revisited, or if you’re suggesting a solution to the problem that needs to be implemented. These are different than regular comments because they are actionable. The actions are `FIXME: -- need to figure this out` or `TODO: -- need to implement`.
+  - [18.4](#comments--actionitems) No `FIXME` or `TODO`. They tempt to polute the code and never get removed. Instead, a jira ticket should be created containing a detailed breakdown of the issue.
 
-  <a name="comments--fixme"></a><a name="17.4"></a>
-  - [18.5](#comments--fixme) Use `// FIXME:` to annotate problems.
 
-    ```javascript
-    class Calculator extends Abacus {
-      constructor() {
-        super();
-
-        // FIXME: shouldn’t use a global here
-        total = 0;
-      }
-    }
-    ```
-
-  <a name="comments--todo"></a><a name="17.5"></a>
-  - [18.6](#comments--todo) Use `// TODO:` to annotate solutions to problems.
-
-    ```javascript
-    class Calculator extends Abacus {
-      constructor() {
-        super();
-
-        // TODO: total should be configurable by an options param
-        this.total = 0;
-      }
-    }
-    ```
 
 **[⬆ back to top](#table-of-contents)**
 
 ## Whitespace
 
   <a name="whitespace--spaces"></a><a name="18.1"></a>
-  - [19.1](#whitespace--spaces) Use soft tabs (space character) set to 2 spaces. eslint: [`indent`](https://eslint.org/docs/rules/indent.html)
+  - [19.1](#whitespace--spaces) Use soft tabs (space character) set to 4 spaces. eslint: [`indent`](https://eslint.org/docs/rules/indent.html)
 
     ```javascript
-    // bad
-    function foo() {
-    ∙∙∙∙let name;
-    }
-
     // bad
     function bar() {
     ∙let name;
     }
 
-    // good
+    // bad
     function baz() {
     ∙∙let name;
     }
+
+    // good
+    function foo() {
+    ∙∙∙∙let name;
+    }
+
     ```
 
   <a name="whitespace--before-blocks"></a><a name="18.2"></a>
@@ -2488,31 +2341,6 @@ Other Style Guides
     const x = y + 5;
     ```
 
-  <a name="whitespace--newline-at-end"></a><a name="18.5"></a>
-  - [19.5](#whitespace--newline-at-end) End files with a single newline character. eslint: [`eol-last`](https://github.com/eslint/eslint/blob/master/docs/rules/eol-last.md)
-
-    ```javascript
-    // bad
-    import { es6 } from './AirbnbStyleGuide';
-      // ...
-    export default es6;
-    ```
-
-    ```javascript
-    // bad
-    import { es6 } from './AirbnbStyleGuide';
-      // ...
-    export default es6;↵
-    ↵
-    ```
-
-    ```javascript
-    // good
-    import { es6 } from './AirbnbStyleGuide';
-      // ...
-    export default es6;↵
-    ```
-
   <a name="whitespace--chains"></a><a name="18.6"></a>
   - [19.6](#whitespace--chains) Use indentation when making long method chains (more than 2 method chains). Use a leading dot, which
     emphasizes that the line is a method call, not a new statement. eslint: [`newline-per-chained-call`](https://eslint.org/docs/rules/newline-per-chained-call) [`no-whitespace-before-property`](https://eslint.org/docs/rules/no-whitespace-before-property)
@@ -2546,10 +2374,10 @@ Other Style Guides
     // good
     const leds = stage.selectAll('.led')
         .data(data)
-      .enter().append('svg:svg')
+        .enter().append('svg:svg')
         .classed('led', true)
         .attr('width', (radius + margin) * 2)
-      .append('svg:g')
+        .append('svg:g')
         .attr('transform', `translate(${radius + margin},${radius + margin})`)
         .call(tron.led);
 
@@ -2656,46 +2484,8 @@ Other Style Guides
     }
     ```
 
-  <a name="whitespace--in-parens"></a><a name="18.9"></a>
-  - [19.9](#whitespace--in-parens) Do not add spaces inside parentheses. eslint: [`space-in-parens`](https://eslint.org/docs/rules/space-in-parens.html)
-
-    ```javascript
-    // bad
-    function bar( foo ) {
-      return foo;
-    }
-
-    // good
-    function bar(foo) {
-      return foo;
-    }
-
-    // bad
-    if ( foo ) {
-      console.log(foo);
-    }
-
-    // good
-    if (foo) {
-      console.log(foo);
-    }
-    ```
-
-  <a name="whitespace--in-brackets"></a><a name="18.10"></a>
-  - [19.10](#whitespace--in-brackets) Do not add spaces inside brackets. eslint: [`array-bracket-spacing`](https://eslint.org/docs/rules/array-bracket-spacing.html)
-
-    ```javascript
-    // bad
-    const foo = [ 1, 2, 3 ];
-    console.log(foo[ 0 ]);
-
-    // good
-    const foo = [1, 2, 3];
-    console.log(foo[0]);
-    ```
-
-  <a name="whitespace--in-braces"></a><a name="18.11"></a>
-  - [19.11](#whitespace--in-braces) Add spaces inside curly braces. eslint: [`object-curly-spacing`](https://eslint.org/docs/rules/object-curly-spacing.html)
+  <a name="whitespace--in-braces"></a><a name="18.9"></a>
+  - [19.9](#whitespace--in-braces) Add spaces inside curly braces. eslint: [`object-curly-spacing`](https://eslint.org/docs/rules/object-curly-spacing.html)
 
     ```javascript
     // bad
@@ -2705,8 +2495,8 @@ Other Style Guides
     const foo = { clark: 'kent' };
     ```
 
-  <a name="whitespace--max-len"></a><a name="18.12"></a>
-  - [19.12](#whitespace--max-len) Avoid having lines of code that are longer than 100 characters (including whitespace). Note: per [above](#strings--line-length), long strings are exempt from this rule, and should not be broken up. eslint: [`max-len`](https://eslint.org/docs/rules/max-len.html)
+  <a name="whitespace--max-len"></a><a name="18.10"></a>
+  - [19.10](#whitespace--max-len) Avoid having lines of code that are longer than 100 characters (including whitespace). Note: per [above](#strings--line-length), long strings are exempt from this rule, and should not be broken up. eslint: [`max-len`](https://eslint.org/docs/rules/max-len.html)
 
     > Why? This ensures readability and maintainability.
 
@@ -2736,7 +2526,7 @@ Other Style Guides
     ```
 
   <a name="whitespace--block-spacing"></a>
-  - [19.13](#whitespace--block-spacing) Require consistent spacing inside an open block token and the next token on the same line. This rule also enforces consistent spacing inside a close block token and previous token on the same line. eslint: [`block-spacing`](https://eslint.org/docs/rules/block-spacing)
+  - [19.11](#whitespace--block-spacing) Require consistent spacing inside an open block token and the next token on the same line. This rule also enforces consistent spacing inside a close block token and previous token on the same line. eslint: [`block-spacing`](https://eslint.org/docs/rules/block-spacing)
 
     ```javascript
     // bad
@@ -2749,7 +2539,7 @@ Other Style Guides
     ```
 
   <a name="whitespace--comma-spacing"></a>
-  - [19.14](#whitespace--comma-spacing) Avoid spaces before commas and require a space after commas. eslint: [`comma-spacing`](https://eslint.org/docs/rules/comma-spacing)
+  - [19.12](#whitespace--comma-spacing) Avoid spaces before commas and require a space after commas. eslint: [`comma-spacing`](https://eslint.org/docs/rules/comma-spacing)
 
     ```javascript
     // bad
@@ -2761,25 +2551,8 @@ Other Style Guides
     var arr = [1, 2];
     ```
 
-  <a name="whitespace--computed-property-spacing"></a>
-  - [19.15](#whitespace--computed-property-spacing) Enforce spacing inside of computed property brackets. eslint: [`computed-property-spacing`](https://eslint.org/docs/rules/computed-property-spacing)
-
-    ```javascript
-    // bad
-    obj[foo ]
-    obj[ 'foo']
-    var x = {[ b ]: a}
-    obj[foo[ bar ]]
-
-    // good
-    obj[foo]
-    obj['foo']
-    var x = { [b]: a }
-    obj[foo[bar]]
-    ```
-
   <a name="whitespace--func-call-spacing"></a>
-  - [19.16](#whitespace--func-call-spacing) Avoid spaces between functions and their invocations. eslint: [`func-call-spacing`](https://eslint.org/docs/rules/func-call-spacing)
+  - [19.13](#whitespace--func-call-spacing) Avoid spaces between functions and their invocations. eslint: [`func-call-spacing`](https://eslint.org/docs/rules/func-call-spacing)
 
     ```javascript
     // bad
@@ -2793,7 +2566,7 @@ Other Style Guides
     ```
 
   <a name="whitespace--key-spacing"></a>
-  - [19.17](#whitespace--key-spacing) Enforce spacing between keys and values in object literal properties. eslint: [`key-spacing`](https://eslint.org/docs/rules/key-spacing)
+  - [19.14](#whitespace--key-spacing) Enforce spacing between keys and values in object literal properties. eslint: [`key-spacing`](https://eslint.org/docs/rules/key-spacing)
 
     ```javascript
     // bad
@@ -2805,10 +2578,10 @@ Other Style Guides
     ```
 
   <a name="whitespace--no-trailing-spaces"></a>
-  - [19.18](#whitespace--no-trailing-spaces) Avoid trailing spaces at the end of lines. eslint: [`no-trailing-spaces`](https://eslint.org/docs/rules/no-trailing-spaces)
+  - [19.15](#whitespace--no-trailing-spaces) Avoid trailing spaces at the end of lines. eslint: [`no-trailing-spaces`](https://eslint.org/docs/rules/no-trailing-spaces)
 
   <a name="whitespace--no-multiple-empty-lines"></a>
-  - [19.19](#whitespace--no-multiple-empty-lines) Avoid multiple empty lines and only allow one newline at the end of files. eslint: [`no-multiple-empty-lines`](https://eslint.org/docs/rules/no-multiple-empty-lines)
+  - [19.16](#whitespace--no-multiple-empty-lines) Avoid multiple empty lines and only allow one newline at the end of files. eslint: [`no-multiple-empty-lines`](https://eslint.org/docs/rules/no-multiple-empty-lines)
 
     <!-- markdownlint-disable MD012 -->
     ```javascript
@@ -2825,6 +2598,48 @@ Other Style Guides
     var y = 2;
     ```
     <!-- markdownlint-enable MD012 -->
+
+
+  <a name="whitespace--in-parens"></a><a name="18.17"></a>
+  - [19.17](#whitespace--in-parens) Do not add spaces inside parentheses. eslint: [`space-in-parens`](https://eslint.org/docs/rules/space-in-parens.html)
+
+    ```javascript
+    // bad
+    function bar( foo ) {
+      return foo;
+    }
+
+    // good
+    function bar(foo) {
+      return foo;
+    }
+
+    // bad
+    if ( foo ) {
+      console.log(foo);
+    }
+
+    // good
+    if (foo) {
+      console.log(foo);
+    }
+    ```
+  <a name="whitespace--computed-property-spacing"></a>
+  - [19.18](#whitespace--computed-property-spacing) Enforce spacing inside of computed property brackets. eslint: [`computed-property-spacing`](https://eslint.org/docs/rules/computed-property-spacing)
+
+    ```javascript
+    // bad
+    obj[foo ]
+    obj[ 'foo']
+    var x = {[ b ]: a}
+    obj[foo[ bar ]]
+
+    // good
+    obj[foo]
+    obj['foo']
+    var x = { [b]: a }
+    obj[foo[bar]]
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -3701,173 +3516,11 @@ Other Style Guides
 
 **[⬆ back to top](#table-of-contents)**
 
-## In the Wild
-
-  This is a list of organizations that are using this style guide. Send us a pull request and we'll add you to the list.
-
-  - **123erfasst**: [123erfasst/javascript](https://github.com/123erfasst/javascript)
-  - **3blades**: [3Blades](https://github.com/3blades)
-  - **4Catalyzer**: [4Catalyzer/javascript](https://github.com/4Catalyzer/javascript)
-  - **Aan Zee**: [AanZee/javascript](https://github.com/AanZee/javascript)
-  - **Adult Swim**: [adult-swim/javascript](https://github.com/adult-swim/javascript)
-  - **Airbnb**: [airbnb/javascript](https://github.com/airbnb/javascript)
-  - **AltSchool**: [AltSchool/javascript](https://github.com/AltSchool/javascript)
-  - **Apartmint**: [apartmint/javascript](https://github.com/apartmint/javascript)
-  - **Ascribe**: [ascribe/javascript](https://github.com/ascribe/javascript)
-  - **Avalara**: [avalara/javascript](https://github.com/avalara/javascript)
-  - **Avant**: [avantcredit/javascript](https://github.com/avantcredit/javascript)
-  - **Axept**: [axept/javascript](https://github.com/axept/javascript)
-  - **BashPros**: [BashPros/javascript](https://github.com/BashPros/javascript)
-  - **Billabong**: [billabong/javascript](https://github.com/billabong/javascript)
-  - **Bisk**: [bisk](https://github.com/Bisk/)
-  - **Bonhomme**: [bonhommeparis/javascript](https://github.com/bonhommeparis/javascript)
-  - **Brainshark**: [brainshark/javascript](https://github.com/brainshark/javascript)
-  - **CaseNine**: [CaseNine/javascript](https://github.com/CaseNine/javascript)
-  - **Cerner**: [Cerner](https://github.com/cerner/)
-  - **Chartboost**: [ChartBoost/javascript-style-guide](https://github.com/ChartBoost/javascript-style-guide)
-  - **ComparaOnline**: [comparaonline/javascript](https://github.com/comparaonline/javascript-style-guide)
-  - **Compass Learning**: [compasslearning/javascript-style-guide](https://github.com/compasslearning/javascript-style-guide)
-  - **DailyMotion**: [dailymotion/javascript](https://github.com/dailymotion/javascript)
-  - **DoSomething**: [DoSomething/eslint-config](https://github.com/DoSomething/eslint-config)
-  - **Digitpaint** [digitpaint/javascript](https://github.com/digitpaint/javascript)
-  - **Drupal**: [www.drupal.org](https://www.drupal.org/project/drupal)
-  - **Ecosia**: [ecosia/javascript](https://github.com/ecosia/javascript)
-  - **Evernote**: [evernote/javascript-style-guide](https://github.com/evernote/javascript-style-guide)
-  - **Evolution Gaming**: [evolution-gaming/javascript](https://github.com/evolution-gaming/javascript)
-  - **EvozonJs**: [evozonjs/javascript](https://github.com/evozonjs/javascript)
-  - **ExactTarget**: [ExactTarget/javascript](https://github.com/ExactTarget/javascript)
-  - **Expensify** [Expensify/Style-Guide](https://github.com/Expensify/Style-Guide/blob/master/javascript.md)
-  - **Flexberry**: [Flexberry/javascript-style-guide](https://github.com/Flexberry/javascript-style-guide)
-  - **Gawker Media**: [gawkermedia](https://github.com/gawkermedia/)
-  - **General Electric**: [GeneralElectric/javascript](https://github.com/GeneralElectric/javascript)
-  - **Generation Tux**: [GenerationTux/javascript](https://github.com/generationtux/styleguide)
-  - **GoodData**: [gooddata/gdc-js-style](https://github.com/gooddata/gdc-js-style)
-  - **GreenChef**: [greenchef/javascript](https://github.com/greenchef/javascript)
-  - **Grooveshark**: [grooveshark/javascript](https://github.com/grooveshark/javascript)
-  - **Grupo-Abraxas**: [Grupo-Abraxas/javascript](https://github.com/Grupo-Abraxas/javascript)
-  - **Honey**: [honeyscience/javascript](https://github.com/honeyscience/javascript)
-  - **How About We**: [howaboutwe/javascript](https://github.com/howaboutwe/javascript-style-guide)
-  - **Huballin**: [huballin](https://github.com/huballin/)
-  - **HubSpot**: [HubSpot/javascript](https://github.com/HubSpot/javascript)
-  - **Hyper**: [hyperoslo/javascript-playbook](https://github.com/hyperoslo/javascript-playbook/blob/master/style.md)
-  - **InterCity Group**: [intercitygroup/javascript-style-guide](https://github.com/intercitygroup/javascript-style-guide)
-  - **Jam3**: [Jam3/Javascript-Code-Conventions](https://github.com/Jam3/Javascript-Code-Conventions)
-  - **JeopardyBot**: [kesne/jeopardy-bot](https://github.com/kesne/jeopardy-bot/blob/master/STYLEGUIDE.md)
-  - **JSSolutions**: [JSSolutions/javascript](https://github.com/JSSolutions/javascript)
-  - **Kaplan Komputing**: [kaplankomputing/javascript](https://github.com/kaplankomputing/javascript)
-  - **KickorStick**: [kickorstick](https://github.com/kickorstick/)
-  - **Kinetica Solutions**: [kinetica/javascript](https://github.com/kinetica/Javascript-style-guide)
-  - **LEINWAND**: [LEINWAND/javascript](https://github.com/LEINWAND/javascript)
-  - **Lonely Planet**: [lonelyplanet/javascript](https://github.com/lonelyplanet/javascript)
-  - **M2GEN**: [M2GEN/javascript](https://github.com/M2GEN/javascript)
-  - **Mighty Spring**: [mightyspring/javascript](https://github.com/mightyspring/javascript)
-  - **MinnPost**: [MinnPost/javascript](https://github.com/MinnPost/javascript)
-  - **MitocGroup**: [MitocGroup/javascript](https://github.com/MitocGroup/javascript)
-  - **ModCloth**: [modcloth/javascript](https://github.com/modcloth/javascript)
-  - **Money Advice Service**: [moneyadviceservice/javascript](https://github.com/moneyadviceservice/javascript)
-  - **Muber**: [muber](https://github.com/muber/)
-  - **National Geographic**: [natgeo](https://github.com/natgeo/)
-  - **Nimbl3**: [nimbl3/javascript](https://github.com/nimbl3/javascript)
-  - **NullDev**: [NullDevCo/JavaScript-Styleguide](https://github.com/NullDevCo/JavaScript-Styleguide)
-  - **Nulogy**: [nulogy/javascript](https://github.com/nulogy/javascript)
-  - **Orange Hill Development**: [orangehill/javascript](https://github.com/orangehill/javascript)
-  - **Orion Health**: [orionhealth/javascript](https://github.com/orionhealth/javascript)
-  - **OutBoxSoft**: [OutBoxSoft/javascript](https://github.com/OutBoxSoft/javascript)
-  - **Peerby**: [Peerby/javascript](https://github.com/Peerby/javascript)
-  - **Pier 1**: [Pier1/javascript](https://github.com/pier1/javascript)
-  - **Qotto**: [Qotto/javascript-style-guide](https://github.com/Qotto/javascript-style-guide)
-  - **Razorfish**: [razorfish/javascript-style-guide](https://github.com/razorfish/javascript-style-guide)
-  - **reddit**: [reddit/styleguide/javascript](https://github.com/reddit/styleguide/tree/master/javascript)
-  - **React**: [facebook.github.io/react/contributing/how-to-contribute.html#style-guide](https://facebook.github.io/react/contributing/how-to-contribute.html#style-guide)
-  - **REI**: [reidev/js-style-guide](https://github.com/rei/code-style-guides/)
-  - **Ripple**: [ripple/javascript-style-guide](https://github.com/ripple/javascript-style-guide)
-  - **Sainsbury’s Supermarkets**: [jsainsburyplc](https://github.com/jsainsburyplc)
-  - **SeekingAlpha**: [seekingalpha/javascript-style-guide](https://github.com/seekingalpha/javascript-style-guide)
-  - **Shutterfly**: [shutterfly/javascript](https://github.com/shutterfly/javascript)
-  - **Sourcetoad**: [sourcetoad/javascript](https://github.com/sourcetoad/javascript)
-  - **Springload**: [springload](https://github.com/springload/)
-  - **StratoDem Analytics**: [stratodem/javascript](https://github.com/stratodem/javascript)
-  - **SteelKiwi Development**: [steelkiwi/javascript](https://github.com/steelkiwi/javascript)
-  - **StudentSphere**: [studentsphere/javascript](https://github.com/studentsphere/guide-javascript)
-  - **SwoopApp**: [swoopapp/javascript](https://github.com/swoopapp/javascript)
-  - **SysGarage**: [sysgarage/javascript-style-guide](https://github.com/sysgarage/javascript-style-guide)
-  - **Syzygy Warsaw**: [syzygypl/javascript](https://github.com/syzygypl/javascript)
-  - **Target**: [target/javascript](https://github.com/target/javascript)
-  - **Terra**: [terra](https://github.com/cerner?utf8=%E2%9C%93&q=terra&type=&language=)
-  - **TheLadders**: [TheLadders/javascript](https://github.com/TheLadders/javascript)
-  - **The Nerdery**: [thenerdery/javascript-standards](https://github.com/thenerdery/javascript-standards)
-  - **T4R Technology**: [T4R-Technology/javascript](https://github.com/T4R-Technology/javascript)
-  - **UrbanSim**: [urbansim](https://github.com/urbansim/)
-  - **VoxFeed**: [VoxFeed/javascript-style-guide](https://github.com/VoxFeed/javascript-style-guide)
-  - **WeBox Studio**: [weboxstudio/javascript](https://github.com/weboxstudio/javascript)
-  - **Weggo**: [Weggo/javascript](https://github.com/Weggo/javascript)
-  - **Zillow**: [zillow/javascript](https://github.com/zillow/javascript)
-  - **ZocDoc**: [ZocDoc/javascript](https://github.com/ZocDoc/javascript)
-
-**[⬆ back to top](#table-of-contents)**
-
-## Translation
-
-  This style guide is also available in other languages:
-
-  - ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) **Brazilian Portuguese**: [armoucar/javascript-style-guide](https://github.com/armoucar/javascript-style-guide)
-  - ![bg](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Bulgaria.png) **Bulgarian**: [borislavvv/javascript](https://github.com/borislavvv/javascript)
-  - ![ca](https://raw.githubusercontent.com/fpmweb/javascript-style-guide/master/img/catala.png) **Catalan**: [fpmweb/javascript-style-guide](https://github.com/fpmweb/javascript-style-guide)
-  - ![cn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **Chinese (Simplified)**: [lin-123/javascript](https://github.com/lin-123/javascript)
-  - ![tw](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Taiwan.png) **Chinese (Traditional)**: [jigsawye/javascript](https://github.com/jigsawye/javascript)
-  - ![fr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/France.png) **French**: [nmussy/javascript-style-guide](https://github.com/nmussy/javascript-style-guide)
-  - ![de](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Germany.png) **German**: [timofurrer/javascript-style-guide](https://github.com/timofurrer/javascript-style-guide)
-  - ![it](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Italy.png) **Italian**: [sinkswim/javascript-style-guide](https://github.com/sinkswim/javascript-style-guide)
-  - ![jp](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Japan.png) **Japanese**: [mitsuruog/javascript-style-guide](https://github.com/mitsuruog/javascript-style-guide)
-  - ![kr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/South-Korea.png) **Korean**: [ParkSB/javascript-style-guide](https://github.com/ParkSB/javascript-style-guide)
-  - ![ru](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Russia.png) **Russian**: [leonidlebedev/javascript-airbnb](https://github.com/leonidlebedev/javascript-airbnb)
-  - ![es](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Spain.png) **Spanish**: [paolocarrasco/javascript-style-guide](https://github.com/paolocarrasco/javascript-style-guide)
-  - ![th](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Thailand.png) **Thai**: [lvarayut/javascript-style-guide](https://github.com/lvarayut/javascript-style-guide)
-  - ![tr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Turkey.png) **Turkish**: [eraycetinay/javascript](https://github.com/eraycetinay/javascript)
-  - ![ua](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Ukraine.png) **Ukrainian**: [ivanzusko/javascript](https://github.com/ivanzusko/javascript)
-  - ![vn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Vietnam.png) **Vietnam**: [dangkyokhoang/javascript-style-guide](https://github.com/dangkyokhoang/javascript-style-guide)
-
 ## The JavaScript Style Guide Guide
 
   - [Reference](https://github.com/airbnb/javascript/wiki/The-JavaScript-Style-Guide-Guide)
 
-## Chat With Us About JavaScript
-
-  - Find us on [gitter](https://gitter.im/airbnb/javascript).
-
-## Contributors
-
-  - [View Contributors](https://github.com/airbnb/javascript/graphs/contributors)
-
-## License
-
-(The MIT License)
-
-Copyright (c) 2012 Airbnb
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **[⬆ back to top](#table-of-contents)**
-
-## Amendments
-
-We encourage you to fork this guide and change the rules to fit your team’s style guide. Below, you may list some amendments to the style guide. This allows you to periodically update your style guide without having to deal with merge conflicts.
 
 # };
