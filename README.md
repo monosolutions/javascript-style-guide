@@ -1,8 +1,6 @@
-# Airbnb JavaScript Style Guide() {
+# Mono Solutions JavaScript Style Guide() {
 
 *A mostly reasonable approach to JavaScript*
-
-> **Note**: this guide assumes you are using [Babel](https://babeljs.io), and requires that you use [babel-preset-airbnb](https://npmjs.com/babel-preset-airbnb) or the equivalent.
 
 Other Style Guides
 
@@ -43,11 +41,7 @@ Other Style Guides
   1. [Testing](#testing)
   1. [Performance](#performance)
   1. [Resources](#resources)
-  1. [In the Wild](#in-the-wild)
   1. [The JavaScript Style Guide Guide](#the-javascript-style-guide-guide)
-  1. [Chat With Us About JavaScript](#chat-with-us-about-javascript)
-  1. [Contributors](#contributors)
-  1. [License](#license)
   1. [Amendments](#amendments)
 
 ## Types
@@ -804,6 +798,62 @@ Other Style Guides
       // ...
     }
     ```
+  <a name="functions--iife"></a><a name="7.11"></a>
+  - [7.11](#functions--iife) Wrap immediately invoked function expressions in parentheses. eslint: [`wrap-iife`](https://eslint.org/docs/rules/wrap-iife.html)
+    > Why? An immediately invoked function expression is a single unit - wrapping both it, and its invocation parens, in parens, cleanly expresses this. **Note that in a world with modules everywhere, you almost never need an IIFE.**
+      ```javascript
+      // immediately-invoked function expression (IIFE)
+      (function () {
+        console.log('Welcome to the Internet. Please follow me.');
+      }());
+      ```
+
+  <a name="functions--spread-vs-apply"></a><a name="7.12"></a>
+  - [7.12](#functions--spread-vs-apply) Prefer the use of the spread operator `...` to call variadic functions. eslint: [`prefer-spread`](https://eslint.org/docs/rules/prefer-spread)
+
+    > Why? It’s cleaner, you don’t need to supply a context, and you can not easily compose `new` with `apply`.
+    ```javascript
+    // bad
+    const x = [1, 2, 3, 4, 5];
+    console.log.apply(console, x);
+    // good
+    const x = [1, 2, 3, 4, 5];
+    console.log(...x);
+    // bad
+    new (Function.prototype.bind.apply(Date, [null, 2016, 8, 5]));
+    // good
+    new Date(...[2016, 8, 5]);
+    ```
+
+  <a name="functions--signature-invocation-indentation"></a>
+  - [7.13](#functions--signature-invocation-indentation) Functions with multiline signatures, or invocations, should be indented just like every other multiline list in this guide: with each item on a line by itself, with a trailing comma on the last item. eslint: [`function-paren-newline`](https://eslint.org/docs/rules/function-paren-newline)
+
+    ```javascript
+    // bad
+    function foo(bar,
+                 baz,
+                 quux) {
+      // ...
+    }
+    // good
+    function foo(
+      bar,
+      baz,
+      quux,
+    ) {
+      // ...
+    }
+    // bad
+    console.log(foo,
+      bar,
+      baz);
+    // good
+    console.log(
+      foo,
+      bar,
+      baz,
+    );
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1542,6 +1592,7 @@ Other Style Guides
     const truthyCount = array.filter(Boolean).length;
     ```
 
+
 <a name="variables--linebreak"></a>
   - [13.6](#variables--linebreak) Avoid linebreaks before or after `=` in an assignment. If your assignment violates [`max-len`](https://eslint.org/docs/rules/max-len.html), surround the value in parens. eslint [`operator-linebreak`](https://eslint.org/docs/rules/operator-linebreak.html).
 
@@ -1605,8 +1656,125 @@ Other Style Guides
     // 'coords' is now the 'data' object without its 'type' property.
     ```
 
+  <a name="variables--one-const"></a><a name="13.8"></a>
+  - [13.8](#variables--one-const) Use one `const` or `let` declaration per variable or assignment. eslint: [`one-var`](https://eslint.org/docs/rules/one-var.html)
+
+    > Why? It’s easier to add new variable declarations this way, and you never have to worry about swapping out a `;` for a `,` or introducing punctuation-only diffs. You can also step through each declaration with the debugger, instead of jumping through all of them at once.
+    ```javascript
+    // bad
+    const items = getItems(),
+        goSportsTeam = true,
+        dragonball = 'z';
+    // bad
+    // (compare to above, and try to spot the mistake)
+    const items = getItems(),
+        goSportsTeam = true;
+        dragonball = 'z';
+    // good
+    const items = getItems();
+    const goSportsTeam = true;
+    const dragonball = 'z';
+    ```
+
 
 **[⬆ back to top](#table-of-contents)**
+
+## Hoisting
+
+  <a name="hoisting--about"></a><a name="14.1"></a>
+  - [14.1](#hoisting--about) `var` declarations get hoisted to the top of their closest enclosing function scope, their assignment does not. `const` and `let` declarations are blessed with a new concept called [Temporal Dead Zones (TDZ)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#Temporal_Dead_Zone). It’s important to know why [typeof is no longer safe](http://es-discourse.com/t/why-typeof-is-no-longer-safe/15).
+
+    ```javascript
+    // we know this wouldn’t work (assuming there
+    // is no notDefined global variable)
+    function example() {
+      console.log(notDefined); // => throws a ReferenceError
+    }
+
+    // creating a variable declaration after you
+    // reference the variable will work due to
+    // variable hoisting. Note: the assignment
+    // value of `true` is not hoisted.
+    function example() {
+      console.log(declaredButNotAssigned); // => undefined
+      var declaredButNotAssigned = true;
+    }
+
+    // the interpreter is hoisting the variable
+    // declaration to the top of the scope,
+    // which means our example could be rewritten as:
+    function example() {
+      let declaredButNotAssigned;
+      console.log(declaredButNotAssigned); // => undefined
+      declaredButNotAssigned = true;
+    }
+
+    // using const and let
+    function example() {
+      console.log(declaredButNotAssddled-elsesigned); // => throws a ReferenceError
+      console.log(typeof declaredButNotAssigned); // => throws a ReferenceError
+      const declaredButNotAssigned = true;
+    }
+    ```
+
+  <a name="hoisting--anon-expressions"></a><a name="14.2"></a>
+  - [14.2](#hoisting--anon-expressions) Anonymous function expressions hoist their variable name, but not the function assignment.
+
+    ```javascript
+    function example() {
+      console.log(anonymous); // => undefined
+
+      anonymous(); // => TypeError anonymous is not a function
+
+      var anonymous = function () {
+        console.log('anonymous function expression');
+      };
+    }
+    ```
+
+  <a name="hoisting--named-expresions"></a><a name="hoisting--named-expressions"></a><a name="14.3"></a>
+  - [14.3](#hoisting--named-expressions) Named function expressions hoist the variable name, not the function name or the function body.
+
+    ```javascript
+    function example() {
+      console.log(named); // => undefined
+
+      named(); // => TypeError named is not a function
+
+      superPower(); // => ReferenceError superPower is not defined
+
+      var named = function superPower() {
+        console.log('Flying');
+      };
+    }
+
+    // the same is true when the function name
+    // is the same as the variable name.
+    function example() {
+      console.log(named); // => undefined
+
+      named(); // => TypeError named is not a function
+
+      var named = function named() {
+        console.log('named');
+      };
+    }
+    ```
+
+  <a name="hoisting--declarations"></a><a name="14.4"></a>
+  - [14.4](#hoisting--declarations) Function declarations hoist their name and the function body.
+
+    ```javascript
+    function example() {
+      superPower(); // => Flying
+
+      function superPower() {
+        console.log('Flying');
+      }
+    }
+    ```
+
+  - For more information refer to [JavaScript Scoping & Hoisting](http://www.adequatelygood.com/2010/2/JavaScript-Scoping-and-Hoisting/) by [Ben Cherry](http://www.adequatelygood.com/).
 
 ## Comparison Operators & Equality
 
@@ -1835,7 +2003,70 @@ Other Style Guides
       thing3();
     }
     ```
+  <a name="blocks--no-else-return"></a><a name="16.3"></a>
+  - [16.3](#blocks--no-else-return) If an `if` block always executes a `return` statement, the subsequent `else` block is unnecessary. A `return` in an `else if` block following an `if` block that contains a `return` can be separated into multiple `if` blocks. eslint: [`no-else-return`](https://eslint.org/docs/rules/no-else-return)
 
+    ```javascript
+    // bad
+    function foo() {
+      if (x) {
+        return x;
+      } else {
+        return y;
+      }
+    }
+
+    // bad
+    function cats() {
+      if (x) {
+        return x;
+      } else if (y) {
+        return y;
+      }
+    }
+
+    // bad
+    function dogs() {
+      if (x) {
+        return x;
+      } else {
+        if (y) {
+          return y;
+        }
+      }
+    }
+
+    // good
+    function foo() {
+      if (x) {
+        return x;
+      }
+
+      return y;
+    }
+
+    // good
+    function cats() {
+      if (x) {
+        return x;
+      }
+
+      if (y) {
+        return y;
+      }
+    }
+
+    // good
+    function dogs(x) {
+      if (x) {
+        if (z) {
+          return y;
+        }
+      } else {
+        return z;
+      }
+    }
+    ```
 **[⬆ back to top](#table-of-contents)**
 
 ## Control Statements
@@ -2018,7 +2249,7 @@ Other Style Guides
     ```
 
   <a name="comments--actionitems"></a><a name="17.3"></a>
-  - [18.4](#comments--actionitems) No `FIXME` or `TODO`. They tempt to polute the code and never get removed.
+  - [18.4](#comments--actionitems) No `FIXME` or `TODO`. They tempt to polute the code and never get removed. Instead, a jira ticket should be created containing a detailed breakdown of the issue.
 
 
 
@@ -2367,6 +2598,48 @@ Other Style Guides
     var y = 2;
     ```
     <!-- markdownlint-enable MD012 -->
+
+
+  <a name="whitespace--in-parens"></a><a name="18.17"></a>
+  - [19.17](#whitespace--in-parens) Do not add spaces inside parentheses. eslint: [`space-in-parens`](https://eslint.org/docs/rules/space-in-parens.html)
+
+    ```javascript
+    // bad
+    function bar( foo ) {
+      return foo;
+    }
+
+    // good
+    function bar(foo) {
+      return foo;
+    }
+
+    // bad
+    if ( foo ) {
+      console.log(foo);
+    }
+
+    // good
+    if (foo) {
+      console.log(foo);
+    }
+    ```
+  <a name="whitespace--computed-property-spacing"></a>
+  - [19.18](#whitespace--computed-property-spacing) Enforce spacing inside of computed property brackets. eslint: [`computed-property-spacing`](https://eslint.org/docs/rules/computed-property-spacing)
+
+    ```javascript
+    // bad
+    obj[foo ]
+    obj[ 'foo']
+    var x = {[ b ]: a}
+    obj[foo[ bar ]]
+
+    // good
+    obj[foo]
+    obj['foo']
+    var x = { [b]: a }
+    obj[foo[bar]]
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -3247,43 +3520,7 @@ Other Style Guides
 
   - [Reference](https://github.com/airbnb/javascript/wiki/The-JavaScript-Style-Guide-Guide)
 
-## Chat With Us About JavaScript
-
-  - Find us on [gitter](https://gitter.im/airbnb/javascript).
-
-## Contributors
-
-  - [View Contributors](https://github.com/airbnb/javascript/graphs/contributors)
-
-## License
-
-(The MIT License)
-
-Copyright (c) 2012 Airbnb
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **[⬆ back to top](#table-of-contents)**
-
-## Amendments
-
-We encourage you to fork this guide and change the rules to fit your team’s style guide. Below, you may list some amendments to the style guide. This allows you to periodically update your style guide without having to deal with merge conflicts.
 
 # };
